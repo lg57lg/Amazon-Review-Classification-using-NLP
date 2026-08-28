@@ -78,6 +78,18 @@ if predict_clicked:
         proba = model.predict_proba(features)[0]
         classes = model.classes_
         prob_dict = dict(zip(classes, proba))
+        
+        # FIX: Invert the prediction if the model has inverted labels
+        # (This is a temporary fix - you should retrain your model properly)
+        if prediction == "Negative":
+            prediction = "Positive"
+        elif prediction == "Positive":
+            prediction = "Negative"
+        
+        # Swap probabilities accordingly
+        if "Positive" in prob_dict and "Negative" in prob_dict:
+            prob_dict["Positive"], prob_dict["Negative"] = prob_dict["Negative"], prob_dict["Positive"]
+        
         confidence = prob_dict[prediction] * 100
 
         st.markdown("---")
